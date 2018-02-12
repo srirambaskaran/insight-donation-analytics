@@ -35,8 +35,6 @@ public class InputStreamMessage {
         parseMessage(message);
         this.isValidMessage = false;
         checkValidity();
-        this.zipCode = this.zipCode.substring(0,5);
-        
     }
     
     /*
@@ -90,7 +88,7 @@ public class InputStreamMessage {
      * Private Methods for parse and checking the validity of stream message
      */
     private void parseMessage(String message) {
-        String[] tokens = message.split("|");
+        String[] tokens = message.split("\\|");
         this.committeeId = tokens[COMMITTEE_ID_INDEX];
         this.name = tokens[NAME_INDEX];
         this.zipCode = tokens[ZIPCODE_INDEX];
@@ -100,14 +98,6 @@ public class InputStreamMessage {
     }
     
     private void checkValidity() {
-        if(committeeId == null 
-                || name == null 
-                || zipCode == null 
-                || transactionDate == null 
-                || amountString == null 
-                || otherId != null) {
-            isValidMessage = false;
-        }
         
         isValidMessage = validCommitteeId() 
                 && validName() 
@@ -124,6 +114,9 @@ public class InputStreamMessage {
 
 
     private boolean validAmount() {
+        if(this.amountString == null)
+            return false;
+        
         try {
             this.amount = Double.parseDouble(this.amountString);
         }catch(NumberFormatException e) {
@@ -134,6 +127,8 @@ public class InputStreamMessage {
 
 
     private boolean validTransactionDate() {
+        if(this.transactionDate == null)
+            return false;
         try {
             SimpleDateFormat format = new SimpleDateFormat("MMddyyyy");
             this.parsedTransactionDate = Calendar.getInstance();
@@ -146,21 +141,23 @@ public class InputStreamMessage {
 
 
     private boolean validZipCode() {
-        if(this.zipCode.equals("") || this.zipCode.length() < 5)
+        if(this.zipCode == null || this.zipCode.equals("") || this.zipCode.length() < 5)
             return false;
-        else
+        else {
+            this.zipCode = this.zipCode.substring(0, 5);
             return true;
+        }
     }
 
 
     private boolean validName() {
-        if(this.name.equals("")) return false;
+        if(this.name == null || this.name.equals("")) return false;
         else return true;
     }
 
 
     private boolean validCommitteeId() {
-        if(this.committeeId.equals("")) return false;
+        if(this.committeeId == null || this.committeeId.equals("")) return false;
         else return true;
     }
     

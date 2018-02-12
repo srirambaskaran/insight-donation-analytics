@@ -26,6 +26,8 @@ public class StreamAnalyzer {
     private HashMap<Committee, CommitteeDetails> committeRepeatDonerList;
     
     public StreamAnalyzer(String inputFile, double xthPercentile, String outputFile) throws DonationAnalyticsException {
+        this.donationMessages = new HashMap<>();
+        this.committeRepeatDonerList = new HashMap<>();
         //Input Stream
         try {
             streamReader = new FileStreamReader(inputFile);
@@ -78,12 +80,9 @@ public class StreamAnalyzer {
                 PriorityQueue<InputStreamMessage> donorMessages = donationMessages.get(donor);
                 InputStreamMessage headOfQueue = donorMessages.peek();
                 repeatedDonor = headOfQueue.getParsedTransactionDate().get(Calendar.YEAR) < message.getParsedTransactionDate().get(Calendar.YEAR);
+                donorMessages.add(message);
                 if(repeatedDonor) {
-                    donorMessages.add(message);
                     addRepeatedDonor(message);
-                }
-                else {
-                    donorMessages.add(message);
                 }
             } else {
                 PriorityQueue<InputStreamMessage> donorMessage = new PriorityQueue<>(new DonorYearComparator());
@@ -111,9 +110,11 @@ public class StreamAnalyzer {
             //tracking all previous donations to this committee in a given year
             
             CommitteeDetails committeeDetails = committeRepeatDonerList.get(committee);
-            double percentile = DataUtils.calculatePercentile(committeeDetails.getAmounts(), this.xthPercentile);
             committeeDetails.getAmounts().add(message.getAmount());
             committeeDetails.setRunningTotal(committeeDetails.getRunningTotal()+message.getAmount());
+            
+            double percentile = DataUtils.calculatePercentile(committeeDetails.getAmounts(), this.xthPercentile);
+            
             
             outputStreamMessage = new OutputStreamMessage(committee, 
                     committeeDetails.getRunningTotal(), 

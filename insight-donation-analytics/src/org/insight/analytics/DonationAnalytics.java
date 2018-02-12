@@ -1,8 +1,11 @@
 package org.insight.analytics;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.insight.analytics.exceptions.DonationAnalyticsException;
 
@@ -17,10 +20,16 @@ public class DonationAnalytics {
     
     public static void main(String[] args) {
         
-        // TODO: input files hardcoded (can be got as input from properties file).
-        String percentileFile = "input/percentile.txt";
-        String inputFile = "input/itcont.txt";
-        String outputFile = "output/repeat_donors.txt";
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("app.properties"));
+        } catch (IOException e1) {
+            System.err.println("Unable to read properties file.");
+        }
+        
+        String percentileFile = properties.getProperty("percentileFile", "input/percentile.txt");
+        String inputFile = properties.getProperty("inputFile","input/itcont.txt");
+        String outputFile = properties.getProperty("outputFile", "output/repeat_donors.txt");
         
         double xthPercentile = 0.0;
         

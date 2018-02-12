@@ -2,6 +2,7 @@ package org.insight.analytics;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
@@ -26,7 +27,7 @@ public class StreamAnalyzer {
     private HashMap<Committee, CommitteeDetails> committeRepeatDonerList;
     
     public StreamAnalyzer(String inputFile, double xthPercentile, String outputFile) throws DonationAnalyticsException {
-        
+        //Input Stream
         try {
             streamReader = new FileStreamReader(inputFile);
             this.xthPercentile = xthPercentile;
@@ -34,6 +35,7 @@ public class StreamAnalyzer {
             throw new DonationAnalyticsException("Error when creating input stream. Cascade message: ["+e.getMessage()+"]");
         }
         
+        //Output Stream
         try {
             streamWriter = new FileStreamWriter(outputFile);
             this.xthPercentile = xthPercentile;
@@ -43,6 +45,12 @@ public class StreamAnalyzer {
         
     }
     
+    /**
+     * Method that fetches each message and processes individually in processMessage().
+     * 
+     * @throws DonationAnalyticsException
+     */
+    
     public void processMessages() throws DonationAnalyticsException {
         String readMessage = "";
         while((readMessage = streamReader.readMessage()) != null) {
@@ -50,30 +58,54 @@ public class StreamAnalyzer {
         }
     }
     
+    /**
+     * Processes each message from stream, identifying repeated donors and 
+     * creating a output message for repeated donor. It manipulates two instance 
+     * variables namely, donationMessages and committeeRepeatDonorList to track all
+     * repeated donations and calculates percentile.
+     * 
+     * @param readMessage
+     * @throws DonationAnalyticsException
+     */
     public void processMessage(String readMessage) throws DonationAnalyticsException {
         InputStreamMessage message = new InputStreamMessage(readMessage);
         if(message.isValidMessage()) {
             Donor donor = new Donor(message.getName(), message.getZipCode());
             boolean repeatedDonor = true;
             if(donationMessages.containsKey(donor)) {
-                //Check range
-                if(repeatedDonor)
+                PriorityQueue<InputStreamMessage> donorMessages = donationMessages.get(donor);
+                repeatedDonor = donorMessages.peek().getParsedTransactionDate().get(Calendar.YEAR) < message.getParsedTransactionDate().get(Calendar.YEAR);
+                if(repeatedDonor) {
+                    donorMessages.add(message);
                     addRepeatedDonor(message);
-                else {
-                    //add to yearDonations
-                    //continue;
                 }
+                else {
+                    donorMessages.add(message);
+                }
+            } else {
+                PriorityQueue<InputStreamMessage> donorMessage = new PriorityQueue<>(new DonorYearComparator());
+                donorMessage.add(message);
+                donationMessages.put(donor, donorMessage);
             }
         }
-        else {
-            //continue;
-        }
     }
-
+    
+    /**
+     * This finds the committee based on (committee, zipcode and year) combination and 
+     * find the percentile. All these are written into the output stream.
+     * 
+     * @param message
+     * @throws DonationAnalyticsException
+     */
     private void addRepeatedDonor(InputStreamMessage message) throws DonationAnalyticsException {
-        Committee committee = new Committee(message.getCommitteeId(), message.getZipCode(), message.getParsedTransactionDate().get(Calendar.YEAR));
+        Committee committee = new Committee(message.getCommitteeId(), 
+                message.getZipCode(), 
+                message.getParsedTransactionDate().get(Calendar.YEAR));
         OutputStreamMessage outputStreamMessage = null;
-        if(committeRepeatDonerList.containsKey(committee)) {
+        
+        if(committeRepeatDonerList.containsKey(committee)) { 
+            //tracking all previous donations to this committee in a given year
+            
             double percentile = DataUtils.calculatePercentile(committeRepeatDonerList.get(committee).getAmounts(), this.xthPercentile);
             CommitteeDetails committeeDetails = committeRepeatDonerList.get(committee);
             committeeDetails.getAmounts().add(message.getAmount());
@@ -96,5 +128,22 @@ public class StreamAnalyzer {
         }
         
     }
+}
+
+/**
+ * Comparator for donor priority queue. 
+ * This compares year in the input message and returns minimum.
+ * @author srirambaskaran
+ *
+ */
+class DonorYearComparator implements Comparator<InputStreamMessage> {
+    @Override
+    public int compare(InputStreamMessage o1, InputStreamMessage o2) {
+        Integer year1 = o1.getParsedTransactionDate().get(Calendar.YEAR);
+        Integer year2 = o2.getParsedTransactionDate().get(Calendar.YEAR);
+        return year1.compareTo(year2);
+    }
+
+   
     
 }

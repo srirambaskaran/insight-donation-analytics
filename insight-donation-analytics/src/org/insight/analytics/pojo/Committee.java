@@ -29,10 +29,11 @@ public class Committee {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((committee == null) ? 0 : committee.hashCode());
+        result = prime * result + year;
         result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
         return result;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -47,6 +48,8 @@ public class Committee {
                 return false;
         } else if (!committee.equals(other.committee))
             return false;
+        if (year != other.year)
+            return false;
         if (zipCode == null) {
             if (other.zipCode != null)
                 return false;
@@ -54,6 +57,8 @@ public class Committee {
             return false;
         return true;
     }
+
+    
     
     
 }

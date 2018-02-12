@@ -17,9 +17,10 @@ public class DonationAnalytics {
     
     public static void main(String[] args) {
         
-        String percentileFile = args[0];
-        String inputFile = args[1];
-        String outputFile = args[2];
+        // TODO: input files hardcoded (can be got as input from properties file).
+        String percentileFile = "input/percentile.txt";
+        String inputFile = "input/itcont.txt";
+        String outputFile = "output/repeat_donors.txt";
         
         double xthPercentile = 0.0;
         
@@ -41,12 +42,6 @@ public class DonationAnalytics {
         
     }
 
-    /**
-     * Reads percentileFile and returns the value of percentile to be calculated
-     * @param percentileFile
-     * @return percentile value
-     * @throws IOException, when there are issues in reading the percentileFile
-     */
     private static double getRequestedPercentile(String percentileFile) throws DonationAnalyticsException {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(percentileFile));

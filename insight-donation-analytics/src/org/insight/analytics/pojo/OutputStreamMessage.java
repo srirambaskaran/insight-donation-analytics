@@ -29,6 +29,6 @@ public class OutputStreamMessage {
     }
     
     public String toString() {
-        return committee.getCommittee()+"|"+committee.getZipCode()+"|"+committee.getYear()+"|"+Math.round(percentile)+"|"+Math.round(total)+"|"+numberRepeatDonors;
+        return committee.getCommitteeId()+"|"+committee.getZipCode()+"|"+committee.getYear()+"|"+Math.round(percentile)+"|"+Math.round(total)+"|"+numberRepeatDonors;
     }
 }

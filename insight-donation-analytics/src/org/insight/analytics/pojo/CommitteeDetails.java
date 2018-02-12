@@ -23,10 +23,6 @@ public class CommitteeDetails {
     public ArrayList<Double> getAmounts() {
         return amounts;
     }
-    
-    public void setAmounts(ArrayList<Double> amounts) {
-        this.amounts = amounts;
-    }
 
     public int size() {
         return this.amounts.size();

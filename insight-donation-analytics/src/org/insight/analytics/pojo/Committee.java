@@ -1,19 +1,19 @@
 package org.insight.analytics.pojo;
 
 public class Committee {
-    private String committee;
+    private String committeeId;
     private String zipCode;
     private int year;
     
-    public Committee(String committee, String zipCode, int i) {
+    public Committee(String committeeId, String zipCode, int i) {
         super();
-        this.committee = committee;
+        this.committeeId = committeeId;
         this.zipCode = zipCode;
         this.year = i;
     }
     
-    public String getCommittee() {
-        return committee;
+    public String getCommitteeId() {
+        return committeeId;
     }
 
     public String getZipCode() {
@@ -28,7 +28,7 @@ public class Committee {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((committee == null) ? 0 : committee.hashCode());
+        result = prime * result + ((committeeId == null) ? 0 : committeeId.hashCode());
         result = prime * result + year;
         result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
         return result;
@@ -43,10 +43,10 @@ public class Committee {
         if (getClass() != obj.getClass())
             return false;
         Committee other = (Committee) obj;
-        if (committee == null) {
-            if (other.committee != null)
+        if (committeeId == null) {
+            if (other.committeeId != null)
                 return false;
-        } else if (!committee.equals(other.committee))
+        } else if (!committeeId.equals(other.committeeId))
             return false;
         if (year != other.year)
             return false;

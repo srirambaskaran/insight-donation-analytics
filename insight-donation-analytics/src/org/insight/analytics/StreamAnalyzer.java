@@ -1,6 +1,5 @@
 package org.insight.analytics;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ public class StreamAnalyzer {
         //Output Stream
         try {
             streamWriter = new FileStreamWriter(outputFile);
-            this.xthPercentile = xthPercentile;
         } catch (DonationAnalyticsException e) {
             throw new DonationAnalyticsException("Error when creating output stream. Cascade message: ["+e.getMessage()+"]");
         }
@@ -56,6 +54,10 @@ public class StreamAnalyzer {
         while((readMessage = streamReader.readMessage()) != null) {
             processMessage(readMessage);
         }
+        
+        //closing streams
+        streamReader.closeStream();
+        streamWriter.closeStream();
     }
     
     /**

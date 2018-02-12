@@ -1,39 +1,32 @@
-package org.insight.analytics.pojo;
+package org.insight.analytics.models;
 
-public class Committee {
-    private String committeeId;
+public class Donor {
+    private String name;
     private String zipCode;
-    private int year;
     
-    public Committee(String committeeId, String zipCode, int i) {
+    public Donor(String name, String zipCode) {
         super();
-        this.committeeId = committeeId;
+        this.name = name;
         this.zipCode = zipCode;
-        this.year = i;
     }
     
-    public String getCommitteeId() {
-        return committeeId;
+    public String getName() {
+        return name;
     }
 
     public String getZipCode() {
         return zipCode;
     }
 
-    public int getYear() {
-        return year;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((committeeId == null) ? 0 : committeeId.hashCode());
-        result = prime * result + year;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
         return result;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -42,13 +35,11 @@ public class Committee {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Committee other = (Committee) obj;
-        if (committeeId == null) {
-            if (other.committeeId != null)
+        Donor other = (Donor) obj;
+        if (name == null) {
+            if (other.name != null)
                 return false;
-        } else if (!committeeId.equals(other.committeeId))
-            return false;
-        if (year != other.year)
+        } else if (!name.equals(other.name))
             return false;
         if (zipCode == null) {
             if (other.zipCode != null)
@@ -57,8 +48,5 @@ public class Committee {
             return false;
         return true;
     }
-
-    
-    
     
 }

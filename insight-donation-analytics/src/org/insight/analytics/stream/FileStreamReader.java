@@ -8,11 +8,11 @@ import java.io.IOException;
 import org.insight.analytics.exceptions.DonationAnalyticsException;
 
 /**
- * This is a file stream reader that reads the input transaction file. 
- * This is abstract and reads info line by line. This implements the 
- * {@link StreamReader} interface which provides basic read and close 
- * functions for the stream.
- *  
+ * This is a file stream reader that reads the input transaction file. This is
+ * abstract and reads info line by line. This implements the
+ * {@link StreamReader} interface which provides basic read and close functions
+ * for the stream.
+ * 
  * @author srirambaskaran
  *
  */
@@ -20,7 +20,7 @@ public class FileStreamReader implements StreamReader {
 
     private int numberOfLinesRead;
     private BufferedReader reader;
-    
+
     public FileStreamReader(String inputFile) throws DonationAnalyticsException {
         FileReader readerObj = null;
         this.numberOfLinesRead = 0;
@@ -33,23 +33,21 @@ public class FileStreamReader implements StreamReader {
         this.numberOfLinesRead = 0;
     }
     
-    /**
-     * Reads a single message (line) from the file.
-     */
-    
+    public int getNumberOfLinesRead() {
+        return this.numberOfLinesRead;
+    }
+
     public String readMessage() throws DonationAnalyticsException {
         try {
             String message = this.reader.readLine();
             this.numberOfLinesRead++;
             return message;
         } catch (IOException e) {
-            throw new DonationAnalyticsException("Error in reading message. Messages successfully read: "+numberOfLinesRead+".");
+            throw new DonationAnalyticsException(
+                    "Error in reading message. Messages successfully read: " + numberOfLinesRead + ".");
         }
     }
-    
-    /**
-     * Closes the buffered reader.
-     */
+
     public void closeStream() throws DonationAnalyticsException {
         try {
             this.reader.close();

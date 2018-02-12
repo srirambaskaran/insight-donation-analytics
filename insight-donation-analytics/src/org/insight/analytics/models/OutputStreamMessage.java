@@ -1,4 +1,4 @@
-package org.insight.analytics.pojo;
+package org.insight.analytics.models;
 
 public class OutputStreamMessage {
     

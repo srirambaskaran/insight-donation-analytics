@@ -5,21 +5,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.insight.analytics.exceptions.DonationAnalyticsException;
-import org.insight.analytics.pojo.OutputStreamMessage;
+import org.insight.analytics.models.OutputStreamMessage;
 
-public class FileStreamWriter implements StreamWriter{
-    
+public class FileStreamWriter implements StreamWriter {
+
     private BufferedWriter writer;
     private int numberOfLinesWritten;
-    
+
     public FileStreamWriter(String outputFile) throws DonationAnalyticsException {
-        FileWriter writerObj  = null;
+        FileWriter writerObj = null;
         try {
             writerObj = new FileWriter(outputFile);
         } catch (IOException e) {
             throw new DonationAnalyticsException("Error in opening output file");
         }
-        
+
         writer = new BufferedWriter(writerObj);
         this.numberOfLinesWritten = 0;
     }
@@ -27,10 +27,11 @@ public class FileStreamWriter implements StreamWriter{
     @Override
     public void writeMessage(OutputStreamMessage message) throws DonationAnalyticsException {
         try {
-            writer.write(message.toString()+"\n");
-            this.numberOfLinesWritten ++;
+            writer.write(message.toString() + "\n");
+            this.numberOfLinesWritten++;
         } catch (IOException e) {
-            throw new DonationAnalyticsException("Error in writing message. Number of lines previously written: "+numberOfLinesWritten+".");
+            throw new DonationAnalyticsException(
+                    "Error in writing message. Number of lines previously written: " + numberOfLinesWritten + ".");
         }
     }
 
@@ -42,6 +43,5 @@ public class FileStreamWriter implements StreamWriter{
             throw new DonationAnalyticsException("Error in closing stream");
         }
     }
-    
 
 }

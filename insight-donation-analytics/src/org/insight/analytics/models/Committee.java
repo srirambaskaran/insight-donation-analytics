@@ -1,32 +1,39 @@
-package org.insight.analytics.pojo;
+package org.insight.analytics.models;
 
-public class Donor {
-    private String name;
+public class Committee {
+    private String committeeId;
     private String zipCode;
+    private int year;
     
-    public Donor(String name, String zipCode) {
+    public Committee(String committeeId, String zipCode, int i) {
         super();
-        this.name = name;
+        this.committeeId = committeeId;
         this.zipCode = zipCode;
+        this.year = i;
     }
     
-    public String getName() {
-        return name;
+    public String getCommitteeId() {
+        return committeeId;
     }
 
     public String getZipCode() {
         return zipCode;
     }
 
+    public int getYear() {
+        return year;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((committeeId == null) ? 0 : committeeId.hashCode());
+        result = prime * result + year;
         result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
         return result;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -35,11 +42,13 @@ public class Donor {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Donor other = (Donor) obj;
-        if (name == null) {
-            if (other.name != null)
+        Committee other = (Committee) obj;
+        if (committeeId == null) {
+            if (other.committeeId != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!committeeId.equals(other.committeeId))
+            return false;
+        if (year != other.year)
             return false;
         if (zipCode == null) {
             if (other.zipCode != null)
@@ -48,5 +57,8 @@ public class Donor {
             return false;
         return true;
     }
+
+    
+    
     
 }

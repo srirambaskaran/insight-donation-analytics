@@ -6,10 +6,10 @@ public class CommitteeDetails {
     private double runningTotal;
     private ArrayList<Double> amounts;
     
-    public CommitteeDetails(double runningTotal, ArrayList<Double> amounts) {
+    public CommitteeDetails(double runningTotal) {
         super();
         this.runningTotal = runningTotal;
-        this.amounts = amounts;
+        this.amounts = new ArrayList<>();
     }
     
     public double getRunningTotal() {

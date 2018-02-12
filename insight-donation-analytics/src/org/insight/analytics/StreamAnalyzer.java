@@ -74,7 +74,8 @@ public class StreamAnalyzer {
             boolean repeatedDonor = true;
             if(donationMessages.containsKey(donor)) {
                 PriorityQueue<InputStreamMessage> donorMessages = donationMessages.get(donor);
-                repeatedDonor = donorMessages.peek().getParsedTransactionDate().get(Calendar.YEAR) < message.getParsedTransactionDate().get(Calendar.YEAR);
+                InputStreamMessage headOfQueue = donorMessages.peek();
+                repeatedDonor = headOfQueue.getParsedTransactionDate().get(Calendar.YEAR) < message.getParsedTransactionDate().get(Calendar.YEAR);
                 if(repeatedDonor) {
                     donorMessages.add(message);
                     addRepeatedDonor(message);
@@ -98,6 +99,7 @@ public class StreamAnalyzer {
      * @throws DonationAnalyticsException
      */
     private void addRepeatedDonor(InputStreamMessage message) throws DonationAnalyticsException {
+        
         Committee committee = new Committee(message.getCommitteeId(), 
                 message.getZipCode(), 
                 message.getParsedTransactionDate().get(Calendar.YEAR));
@@ -106,19 +108,27 @@ public class StreamAnalyzer {
         if(committeRepeatDonerList.containsKey(committee)) { 
             //tracking all previous donations to this committee in a given year
             
-            double percentile = DataUtils.calculatePercentile(committeRepeatDonerList.get(committee).getAmounts(), this.xthPercentile);
             CommitteeDetails committeeDetails = committeRepeatDonerList.get(committee);
+            double percentile = DataUtils.calculatePercentile(committeeDetails.getAmounts(), this.xthPercentile);
             committeeDetails.getAmounts().add(message.getAmount());
             committeeDetails.setRunningTotal(committeeDetails.getRunningTotal()+message.getAmount());
             
-            outputStreamMessage = new OutputStreamMessage(committee, committeRepeatDonerList.get(committee).getRunningTotal(), percentile, committeRepeatDonerList.get(committee).size());
+            outputStreamMessage = new OutputStreamMessage(committee, 
+                    committeeDetails.getRunningTotal(), 
+                    percentile, 
+                    committeeDetails.size());
         }else {
+            
+            //starting new tracking for a committee in a given year.
             double percentile = message.getAmount(); //Any percentile of a list of 1 value is the same.  
-            CommitteeDetails committeeDetails = new CommitteeDetails(message.getAmount(), new ArrayList<Double>());
-            committeeDetails.setRunningTotal(committeeDetails.getRunningTotal()+message.getAmount());
+            CommitteeDetails committeeDetails = new CommitteeDetails(message.getAmount());
+            committeeDetails.getAmounts().add(message.getAmount());
             committeRepeatDonerList.put(committee, committeeDetails);
 
-            outputStreamMessage = new OutputStreamMessage(committee, committeRepeatDonerList.get(committee).getRunningTotal(), percentile, committeRepeatDonerList.get(committee).size());
+            outputStreamMessage = new OutputStreamMessage(committee, 
+                    committeeDetails.getRunningTotal(), 
+                    percentile, 
+                    committeeDetails.size());
         }
         
         try {

@@ -1,0 +1,4 @@
+C00384516|x|x|x|x|x|x|SABOURIN, JOE|x|x|028956146|x|x|01312018|250.43||x|x|x|x|x
+C00384516|x|x|x|x|x|x|SABOURIN, JOE|x|x|028956146|x|x|01312018|200||x|x|x|x|x
+C00384516|x|x|x|x|x|x|SABOURIN, JOE|x|x|028956146|x|x|01312016|130||x|x|x|x|x
+C00384516|x|x|x|x|x|x|SABOURIN, JOE|x|x|028956146|x|x|01312017|400||x|x|x|x|x

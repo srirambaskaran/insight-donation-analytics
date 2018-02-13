@@ -1,0 +1,1 @@
+java -jar ./src/final.jar ./src/app.properties

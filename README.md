@@ -87,3 +87,5 @@ The properties file is optional. If not set, it will pick the input from `input/
 ## Flow diagram
 
 ![flow.png](./pictures/flow.png)
+
+-- Note: that `eclipse-project` folder is not any part of submission. It can be ignored.

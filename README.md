@@ -16,6 +16,8 @@ The data about each and every donation is considered to be streaming in and very
 
 The program currently reads from a file but the design has been made to be to abstract a stream reader. The input and output modules can be easily replaced with a streaming service like Kafka or Storm.
 
+Information on how to run this is provided [here](README.md#running-the-code)
+
 More informaiton about this analytics module has been provided here [Insight Donation Analytics Challenge](https://github.com/InsightDataScience/donation-analytics/).
 
 ## Details about implementation & handling corner cases
@@ -80,9 +82,21 @@ This code can be run using the following command.
 java -jar final.jar [app.properties]
 ```
 
-The `app.properties` will contain `percentileFile`, `inputFile` and `outputFile` as three properties with relevant values. Sample properties file has been provided along with this.
+The `app.properties` will contain `percentileFile`, `inputFile` and `outputFile` as three properties with relevant values. Sample properties file has been provided along with this. This provides a flexibility to provide input from a different folder. IGNORE this if you are having `input` and `output` folder.
 
-The properties file is optional. If not set, it will pick the input from `input/percentile.txt`, `input/itcont.txt` and `output/repeat_donors.txt`.
+The properties file is optional. If not set, it will pick the input from `input/percentile.txt`, `input/itcont.txt` and `output/repeat_donors.txt`. The folders `input` and `output` are expected to be in the same directory as the jar `final.jar`.
+
+The `run_tests.sh` has been run and the results were successful. Expected folder structure to run the code adhoc.
+
+```
+├── final.jar
+├── [optional app.properties]
+├── input
+│   └── percentile.txt
+│   └── itcont.txt
+├── output
+|   └── repeat_donors.txt
+```
 
 ## Flow diagram
 

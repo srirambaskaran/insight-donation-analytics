@@ -30,4 +30,60 @@ To tackle this problem, we can just store the `earliest donation record` that a 
 
 On looking at the data, we can see that a `Donor` can make more than one donation or the committee can add an amendment. We consider both cases as individual contributions which the `Donor` has done separately.
 
-In some cases, the second transaction by a `Donor` will determine the `Donor` as repeated Donor. 
+In some cases, the second transaction by a `Donor` in the same year will determine the `Donor` as repeated Donor. The intricate detail is handled by considering all donations by a `Donor` yearly and adding all the donations of newly identified donors to the committee's contribution list. This is handled in `addAmount(double amount, Donor donor, int year)` function in `CommitteeDetails`.
+
+### Calculating percentile
+
+The `CommitteeDetails` class will maintian all donations received from repeated donors for a given `CommitteeId`, `Zipcode`, `Year`. The percentile is calculated using nearest rank method.
+
+## Design of classes
+
+Data structure commonly used are `HashMap` and `HashSet`. Since custom class objects are modeled as keys, the `hashCode()` and `equals()` method are overridden accordingly.
+
+The design of classes can be split into 4 sections (as they are packaged).
+### Analytics platform
+This contains 2 classes which provide the complete functionality of the analytics module.
+1. `DonationAnalytics` - This is the main class. Basic input handling and wiring of functions happen here
+1. `StreamAnalyzer` - Calls relevant helper methods from other classes to handle the entire business logic
+
+### Stream abstraction
+The abstraction of stream is provided by the `StreamReader` and `StreamWriter` interfaces. Both these have method signatures to do basic stream operations like `read`, `write` and `close`.
+
+`FileStreamReader` and `FileStreamWriter` implements the interfaces and wraps the logic of creating file stream processing.
+
+### Models
+
+Separate models for input and output messages are created. They are serialize and deserialize the data from the stream and using with other models used in `StreamAnalyzer` are created.
+
+`Donor` and `Committee` form the core models for donation and reception of money in this system. They are indexed based on following requirements.
+
+1. `Donor` - indexed using `name`, `zipcode`.
+1. `Committee` - indexed using `committeeId`, `zipcode`, `year`.
+
+`CommitteeDetails` store info about each `Committee` and calculates percentile.
+
+### Miscellaneous classes
+
+The exception class `DonationAnalyticsException` is used to wrap and handle exceptions, provided meaningful messages and safely exit the program during an exception.
+
+## Scalability
+
+This code has been tested with large datasets upto 1.3 GB (7 million records). Total time taken is **57 sec**. The main bottleneck is the calculation of required percentile for each `Committee`.
+
+More test cases are provided in `insight_testsuite/tests`.
+
+## Running the code
+
+This code can be run using the following command.
+
+```
+java -jar final.jar [app.properties]
+```
+
+The `app.properties` will contain `percentileFile`, `inputFile` and `outputFile` as three properties with relevant values. Sample properties file has been provided along with this.
+
+The properties file is optional. If not set, it will pick the input from `input/percentile.txt`, `input/itcont.txt` and `output/repeat_donors.txt`.
+
+## Flow diagram
+
+![flow.png](./pictures/flow.png)

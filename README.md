@@ -18,7 +18,7 @@ The program currently reads from a file but the design has been made to be to ab
 
 Information on how to run this is provided [here](README.md#running-the-code)
 
-More informaiton about this analytics module has been provided here [Insight Donation Analytics Challenge](https://github.com/InsightDataScience/donation-analytics/).
+More informaiton about this analytics module has been provided [here](https://github.com/InsightDataScience/donation-analytics/).
 
 ## Details about implementation & handling corner cases
 

@@ -1,5 +1,13 @@
 package org.insight.analytics.models;
 
+/**
+ * Stream message class that represents the output message written into the stream.
+ * 
+ * 
+ * @author srirambaskaran
+ *
+ */
+
 public class OutputStreamMessage {
 
     private Committee committee;

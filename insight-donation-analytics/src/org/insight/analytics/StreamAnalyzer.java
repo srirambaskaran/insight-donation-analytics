@@ -15,6 +15,13 @@ import org.insight.analytics.stream.FileStreamWriter;
 import org.insight.analytics.stream.StreamReader;
 import org.insight.analytics.stream.StreamWriter;
 
+/**
+ * This class handles stream reading and writing, processes input messages and
+ * calls relevant functions for output.
+ * 
+ * @author srirambaskaran
+ *
+ */
 public class StreamAnalyzer {
 
     private StreamReader streamReader;

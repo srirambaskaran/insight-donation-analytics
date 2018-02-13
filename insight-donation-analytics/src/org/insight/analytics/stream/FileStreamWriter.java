@@ -6,7 +6,15 @@ import java.io.IOException;
 
 import org.insight.analytics.exceptions.DonationAnalyticsException;
 import org.insight.analytics.models.OutputStreamMessage;
-
+/**
+ * This is a file stream writer that writes the output into file. This is
+ * abstract and writes info line by line. This implements the
+ * {@link StreamWriter} interface which provides basic write and close functions
+ * for the stream.
+ * 
+ * @author srirambaskaran
+ *
+ */
 public class FileStreamWriter implements StreamWriter {
 
     private BufferedWriter writer;

@@ -1,5 +1,12 @@
 package org.insight.analytics.models;
 
+/**
+ * This represents one Donor identified by name and zipCode. Custom hashcode and
+ * equals are written for this.
+ * 
+ * @author srirambaskaran
+ *
+ */
 public class Donor {
     private String name;
     private String zipCode;

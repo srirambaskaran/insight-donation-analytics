@@ -1,5 +1,13 @@
 package org.insight.analytics.models;
 
+/**
+ * This represents the recipient. The committee is identified by committeeId,
+ * zipCode, year combination. This is written handled using hashcode and equals
+ * methods. Thus we can use this model as a key in HashMap. 
+ * 
+ * @author srirambaskaran
+ *
+ */
 public class Committee {
     private String committeeId;
     private String zipCode;

@@ -22,10 +22,15 @@ public class DonationAnalytics {
         
         long startTime = Calendar.getInstance().getTimeInMillis();
         Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream("app.properties"));
-        } catch (IOException e1) {
-            System.err.println("Unable to read properties file.");
+        
+        if(args.length > 0) {
+            try {
+                properties.load(new FileInputStream(args[0]));
+            } catch (IOException e1) {
+                System.err.println("Unable to read properties file. Using default values.");
+            }
+        } else {
+            System.err.println("No arguments given. Using default location of input and output file.");
         }
 
         String percentileFile = properties.getProperty("percentileFile", "input/percentile.txt");

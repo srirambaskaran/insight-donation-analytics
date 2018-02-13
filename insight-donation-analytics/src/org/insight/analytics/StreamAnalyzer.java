@@ -69,8 +69,9 @@ public class StreamAnalyzer {
     /**
      * Processes each message from stream, identifying repeated donors and creating
      * a output message for repeated donor. It manipulates two instance variables
-     * namely, donationMessages and committeeRepeatDonorList to track all repeated
-     * donations and calculates percentile.
+     * namely, minDonationDate and committeeRepeatDonorList to track all repeated
+     * donations and calculates percentile. We can safely find a repeated donor by
+     * checking the earliest date of donation by the donor+zipcode combo.
      * 
      * @param readMessage
      * @throws DonationAnalyticsException
@@ -93,6 +94,15 @@ public class StreamAnalyzer {
             }
         }
     }
+    
+    /**
+     * Maintains an exhaustive collection of donor transactions based on year.
+     * If the data is ordered chronologically, we can make this process simpler
+     * saving more space.
+     *  
+     * @param donor
+     * @param message
+     */
 
     private void addDonorTransaction(Donor donor, InputStreamMessage message) {
         int year = message.getParsedTransactionDate().get(Calendar.YEAR);
@@ -123,12 +133,11 @@ public class StreamAnalyzer {
 
         if (committeRepeatDonerList.containsKey(committee)) {
             // tracking all previous donations to this committee in a given year
-
             CommitteeDetails committeeDetails = committeRepeatDonerList.get(committee);
-            committeeDetails.addAmount(message.getAmount(), donor, year, xthPercentile);
+            committeeDetails.addAmount(message.getAmount(), donor, year);
 
-            double percentile = committeeDetails.getPercentile();
-
+            double percentile = committeeDetails.getPercentile(xthPercentile);
+            
             outputStreamMessage = new OutputStreamMessage(committee, committeeDetails.getRunningTotal(), percentile,
                     committeeDetails.size());
         } else {
@@ -136,7 +145,7 @@ public class StreamAnalyzer {
             // starting new tracking for a committee in a given year.
             double percentile = message.getAmount(); // Any percentile of a list of 1 value is the same.
             CommitteeDetails committeeDetails = new CommitteeDetails(allDonations);
-            committeeDetails.addAmount(message.getAmount(), donor, year, xthPercentile);
+            committeeDetails.addAmount(message.getAmount(), donor, year);
             committeRepeatDonerList.put(committee, committeeDetails);
 
             outputStreamMessage = new OutputStreamMessage(committee, committeeDetails.getRunningTotal(), percentile,
